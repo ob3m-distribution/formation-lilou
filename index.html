@@ -61,8 +61,11 @@
 
   /* top nav */
   .top-nav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter:blur(10px) saturate(1.1); border-bottom:1px solid var(--line); padding:12px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .top-nav__brand{display:flex; align-items:center; gap:11px;}
   .top-nav__brand h1{font-size:1.02rem; line-height:1.3;}
   .top-nav__brand span.topbar__name{color:var(--accent);}
+  .mascot{flex:none;}
+  .wave-strip{width:100%; overflow:hidden; line-height:0;}
   .top-nav__links{display:flex; gap:6px; flex-wrap:wrap;}
   .top-nav__links a{font-family:"IBM Plex Mono",monospace; font-size:0.7rem; text-decoration:none; color:var(--ink-soft); padding:6px 12px; border-radius:99px; border:1px solid var(--line); background:var(--surface); white-space:nowrap;}
   .top-nav__links a:hover{border-color:var(--accent); color:var(--accent-strong);}
@@ -163,8 +166,22 @@
 
 <header class="top-nav">
   <div class="top-nav__brand">
-    <span class="kicker">Plaquette de formation</span>
-    <h1>Programme Claude — <span class="topbar__name">Lilou</span></h1>
+    <svg class="mascot" viewBox="0 0 48 48" width="34" height="34" aria-hidden="true">
+      <ellipse cx="24" cy="27" rx="15" ry="14" fill="var(--cat-blue)"/>
+      <ellipse cx="24" cy="31" rx="9" ry="7" fill="var(--cat-aqua)"/>
+      <ellipse cx="13" cy="14" rx="5" ry="7" fill="var(--cat-blue)" transform="rotate(-25 13 14)"/>
+      <ellipse cx="35" cy="14" rx="5" ry="7" fill="var(--cat-blue)" transform="rotate(25 35 14)"/>
+      <circle cx="18" cy="24" r="4.2" fill="#fff"/>
+      <circle cx="30" cy="24" r="4.2" fill="#fff"/>
+      <circle cx="18.8" cy="24.8" r="2" fill="var(--ink)"/>
+      <circle cx="30.8" cy="24.8" r="2" fill="var(--ink)"/>
+      <path d="M24 8 L24 3" stroke="var(--cat-blue)" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="24" cy="3" r="2" fill="var(--accent)"/>
+    </svg>
+    <div>
+      <span class="kicker">Plaquette de formation</span>
+      <h1>Programme Claude — <span class="topbar__name">Lilou</span></h1>
+    </div>
   </div>
   <nav class="top-nav__links" aria-label="Sommaire">
     <a href="#objectifs">Objectifs</a>
@@ -175,17 +192,24 @@
   </nav>
 </header>
 
+<div class="wave-strip" aria-hidden="true">
+  <svg viewBox="0 0 400 16" preserveAspectRatio="none" width="100%" height="16">
+    <path d="M0 8 Q 25 0 50 8 T 100 8 T 150 8 T 200 8 T 250 8 T 300 8 T 350 8 T 400 8" fill="none" stroke="var(--cat-aqua)" stroke-width="3"/>
+    <path d="M0 12 Q 25 4 50 12 T 100 12 T 150 12 T 200 12 T 250 12 T 300 12 T 350 12 T 400 12" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.6"/>
+  </svg>
+</div>
+
 <main class="stage">
 
   <section class="hero section" id="hero">
-    <span class="kicker">Assistante Commerciale Web · AOB Diffusion</span>
+    <span class="kicker"><svg class="hibiscus" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="vertical-align:-3px; margin-right:4px;"><g fill="var(--accent)"><ellipse cx="12" cy="5.5" rx="3" ry="6"/><ellipse cx="12" cy="5.5" rx="3" ry="6" transform="rotate(72 12 12)"/><ellipse cx="12" cy="5.5" rx="3" ry="6" transform="rotate(144 12 12)"/><ellipse cx="12" cy="5.5" rx="3" ry="6" transform="rotate(216 12 12)"/><ellipse cx="12" cy="5.5" rx="3" ry="6" transform="rotate(288 12 12)"/></g><circle cx="12" cy="12" r="3" fill="var(--cat-yellow)"/></svg>Assistante Commerciale Web · AOB Diffusion</span>
     <h1>Un parcours complet pour maîtriser Claude dans ton métier</h1>
     <p class="hero__lede">Ce document présente le programme de formation conçu pour toi : 6 modules, des vidéos courtes, des exercices sur des cas concrets et des fiches prompts prêtes à l'emploi. Les contenus interactifs seront mis à disposition prochainement sur ton espace de formation personnel — cette plaquette en est le sommaire détaillé.</p>
     <div class="stat-row">
       <div class="stat-tile"><span class="stat-tile__num">6</span><span class="stat-tile__label">Modules</span></div>
-      <div class="stat-tile"><span class="stat-tile__num">≈2h40</span><span class="stat-tile__label">Durée totale</span></div>
-      <div class="stat-tile"><span class="stat-tile__num">10</span><span class="stat-tile__label">Vidéos courtes</span></div>
-      <div class="stat-tile"><span class="stat-tile__num">9</span><span class="stat-tile__label">Fiches prompts</span></div>
+      <div class="stat-tile"><span class="stat-tile__num">≈2h50</span><span class="stat-tile__label">Durée totale</span></div>
+      <div class="stat-tile"><span class="stat-tile__num">11</span><span class="stat-tile__label">Vidéos courtes</span></div>
+      <div class="stat-tile"><span class="stat-tile__num">10</span><span class="stat-tile__label">Fiches prompts</span></div>
     </div>
   </section>
 
@@ -219,6 +243,7 @@
       <li>Rédiger une fiche produit vendeuse et optimisée à partir d'une simple liste de caractéristiques.</li>
       <li>Relancer un panier abandonné avec un message qui donne vraiment envie de finaliser l'achat.</li>
       <li>Construire un argumentaire de vente adapté à un client hésitant.</li>
+      <li>Générer des idées de posts et des légendes prêtes à publier pour développer la présence en ligne d'AOB Diffusion.</li>
       <li>Résumer un échange client dans le CRM en quelques lignes exploitables.</li>
       <li>Savoir précisément quelles données clients tu as le droit — ou non — de confier à un outil d'IA.</li>
     </ul>
@@ -250,7 +275,7 @@
       <p class="section-head__lede">Le parcours va du plus général — qu'est-ce que Claude, quelles règles — vers ce qui sera vraiment utile au quotidien : le module 4 traite uniquement des tâches concrètes de ton métier.</p>
     </div>
     <div class="roadmap-wrap">
-      <div class="roadmap" role="img" aria-label="Feuille de route en 6 modules : Découvrir Claude (15 min), Confidentialité et bon usage (15 min), La méthode (20 min), Les usages métier (60 min), Aller plus loin (15 min), Mise en pratique et validation (35 min)">
+      <div class="roadmap" role="img" aria-label="Feuille de route en 6 modules : Découvrir Claude (15 min), Confidentialité et bon usage (15 min), La méthode (20 min), Les usages métier (70 min), Aller plus loin (15 min), Mise en pratique et validation (35 min)">
         <div class="roadmap__node">
           <div class="roadmap__circle">1</div>
           <span class="roadmap__title">Découvrir Claude</span>
@@ -272,7 +297,7 @@
         <div class="roadmap__node">
           <div class="roadmap__circle">4</div>
           <span class="roadmap__title">Usages métier</span>
-          <span class="roadmap__duration">≈60 min</span>
+          <span class="roadmap__duration">≈70 min</span>
           <span class="roadmap__dots"><span class="roadmap__dot" style="--c:var(--cat-blue)"></span><span class="roadmap__dot" style="--c:var(--cat-orange)"></span><span class="roadmap__dot" style="--c:var(--cat-aqua)"></span></span>
         </div>
         <div class="roadmap__node">
@@ -353,21 +378,22 @@
       <article class="module-card">
         <div class="module-card__top">
           <div class="module-card__id"><span class="module-card__num">Module 04</span><h3 class="module-card__title">Les usages métier — cœur du programme</h3></div>
-          <span class="module-card__duration">≈60 min</span>
+          <span class="module-card__duration">≈70 min</span>
         </div>
         <div class="format-legend">
-          <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>6 vidéos</span>
-          <span class="format-badge" style="--c:var(--cat-aqua)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>6 fiches</span>
+          <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>7 vidéos</span>
+          <span class="format-badge" style="--c:var(--cat-aqua)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>7 fiches</span>
           <span class="format-badge" style="--c:var(--cat-orange)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L15.5 5.5l3 3L8 19l-4 1z"/><path d="M13 8l3 3"/></svg>3 exercices</span>
         </div>
-        <p class="module-card__objectif"><strong>Objectif :</strong> disposer d'une boîte à outils de prompts opérationnels pour ton quotidien commercial et e-commerce.</p>
+        <p class="module-card__objectif"><strong>Objectif :</strong> disposer d'une boîte à outils de prompts opérationnels pour ton quotidien commercial, e-commerce et réseaux sociaux.</p>
         <div class="subtheme-list">
-          <div class="subtheme"><span class="subtheme__num">4.1</span><span class="subtheme__text"><strong>Relation client &amp; support</strong> — répondre à un client mécontent, traiter une réclamation, message de support après-vente.</span></div>
-          <div class="subtheme"><span class="subtheme__num">4.2</span><span class="subtheme__text"><strong>Fiches produits &amp; catalogue</strong> — rédiger et optimiser une fiche produit, la décliner en plusieurs formats.</span></div>
-          <div class="subtheme"><span class="subtheme__num">4.3</span><span class="subtheme__text"><strong>Vente &amp; conversion</strong> — argumentaire de vente personnalisé, relance de panier abandonné.</span></div>
-          <div class="subtheme"><span class="subtheme__num">4.4</span><span class="subtheme__text"><strong>Avis clients &amp; réputation</strong> — répondre à un avis négatif, valoriser un avis positif, synthétiser les retours.</span></div>
-          <div class="subtheme"><span class="subtheme__num">4.5</span><span class="subtheme__text"><strong>CRM &amp; suivi</strong> — note de suivi client, résumé d'un échange pour le CRM.</span></div>
-          <div class="subtheme"><span class="subtheme__num">4.6</span><span class="subtheme__text"><strong>Communication multilingue</strong> — traduire et adapter une fiche produit ou un message client à l'international.</span></div>
+          <div class="subtheme"><span class="subtheme__num">4.1</span><span class="subtheme__text"><strong>Relation client &amp; support</strong> — répondre à un client mécontent, traiter une réclamation. <em>Ex. : « Un client se plaint d'un colis abîmé, écris une réponse avec proposition de renvoi gratuit. »</em></span></div>
+          <div class="subtheme"><span class="subtheme__num">4.2</span><span class="subtheme__text"><strong>Fiches produits &amp; catalogue</strong> — rédiger et optimiser une fiche produit. <em>Ex. : « Transforme cette liste de caractéristiques en fiche produit vendeuse de 100 mots. »</em></span></div>
+          <div class="subtheme"><span class="subtheme__num">4.3</span><span class="subtheme__text"><strong>Vente &amp; conversion</strong> — argumentaire de vente, relance de panier abandonné. <em>Ex. : « Écris 3 relances différentes pour un panier à 45€ resté 48h sans achat. »</em></span></div>
+          <div class="subtheme"><span class="subtheme__num">4.4</span><span class="subtheme__text"><strong>Avis clients &amp; réputation</strong> — répondre à un avis négatif, valoriser un avis positif. <em>Ex. : « Réponds à cet avis 2 étoiles sans être défensive, en proposant une solution. »</em></span></div>
+          <div class="subtheme"><span class="subtheme__num">4.5</span><span class="subtheme__text"><strong>CRM &amp; suivi</strong> — note de suivi client, résumé d'un échange. <em>Ex. : « Résume cet échange WhatsApp en 3 lignes pour la fiche client. »</em></span></div>
+          <div class="subtheme"><span class="subtheme__num">4.6</span><span class="subtheme__text"><strong>Réseaux sociaux &amp; présence en ligne</strong> — idées de posts, légendes Instagram/Facebook, calendrier éditorial, réponses aux commentaires. <em>Ex. : « Propose 3 légendes pour un post Instagram de lancement produit, avec hashtags et emoji d'accroche. »</em></span></div>
+          <div class="subtheme"><span class="subtheme__num">4.7</span><span class="subtheme__text"><strong>Communication multilingue</strong> — traduire et adapter une fiche produit ou un message client à l'international. <em>Ex. : « Traduis cette fiche produit en anglais en gardant le même ton commercial. »</em></span></div>
         </div>
         <p class="module-card__deliverable"><strong>Livrable :</strong> 6 fiches prompts prêtes à l'emploi + 3 exercices sur cas anonymisés. Un aperçu juste en dessous.</p>
       </article>
@@ -415,10 +441,11 @@
 
   <section class="section" id="apercu">
     <div class="section-head">
-      <span class="kicker">Extrait du module 4.3</span>
-      <h2>Aperçu d'une fiche pratique</h2>
+      <span class="kicker">Extraits du module 4</span>
+      <h2>Aperçu de deux fiches pratiques</h2>
       <p class="section-head__lede">Chaque fiche du module 4 se présente ainsi : un contexte, un prompt prêt à copier, une astuce.</p>
     </div>
+    <div class="modules">
     <div class="module-card">
       <div class="module-card__top">
         <div class="module-card__id"><span class="module-card__num">Fiche 4.3</span><h3 class="module-card__title">Relancer un panier abandonné</h3></div>
@@ -430,21 +457,34 @@
       </div>
       <p class="module-card__deliverable"><strong>Astuce :</strong> personnalise toujours avec le vrai produit et le vrai prix — un message trop générique se voit tout de suite.</p>
     </div>
+    <div class="module-card">
+      <div class="module-card__top">
+        <div class="module-card__id"><span class="module-card__num">Fiche 4.6</span><h3 class="module-card__title">Rédiger un post Instagram</h3></div>
+      </div>
+      <p class="module-card__objectif">Développer la présence en ligne d'AOB Diffusion sans y passer sa matinée.</p>
+      <div class="prompt-block">
+        <div class="prompt-block__head"><span>Prompt</span><button class="copy-btn">Copier</button></div>
+        <pre class="prompt-block__body">Propose 3 légendes Instagram pour le lancement d'un nouveau bracelet en perles naturelles (19€). Ton dynamique et chaleureux, un emoji d'accroche en début de texte, 5 hashtags pertinents, cible femmes 25-45 ans.</pre>
+      </div>
+      <p class="module-card__deliverable"><strong>Astuce :</strong> demande toujours plusieurs variantes — c'est plus rapide de choisir que de partir d'une page blanche.</p>
+    </div>
+    </div>
   </section>
 
   <section class="section" id="calendrier">
     <div class="section-head">
       <span class="kicker">Rythme suggéré</span>
-      <h2>Calendrier sur 6 semaines</h2>
+      <h2>Calendrier sur 7 semaines</h2>
       <p class="section-head__lede">≈25 à 30 minutes par semaine. Purement indicatif : le programme s'adapte à ton agenda.</p>
     </div>
     <div class="calendar">
       <div class="calendar__row"><span class="calendar__week">Semaine 1</span><span class="calendar__text"><strong>Modules 1 &amp; 2</strong> — fondamentaux et cadre de confidentialité.</span></div>
       <div class="calendar__row"><span class="calendar__week">Semaine 2</span><span class="calendar__text"><strong>Module 3</strong> — la méthode contexte + tâche + format.</span></div>
       <div class="calendar__row"><span class="calendar__week">Semaine 3</span><span class="calendar__text"><strong>Module 4</strong>, partie 1 — relation client, fiches produits.</span></div>
-      <div class="calendar__row"><span class="calendar__week">Semaine 4</span><span class="calendar__text"><strong>Module 4</strong>, partie 2 — vente, avis clients, CRM, traduction.</span></div>
-      <div class="calendar__row"><span class="calendar__week">Semaine 5</span><span class="calendar__text"><strong>Module 5</strong> — fonctionnalités avancées.</span></div>
-      <div class="calendar__row"><span class="calendar__week">Semaine 6</span><span class="calendar__text"><strong>Module 6</strong> — mise en pratique et validation.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 4</span><span class="calendar__text"><strong>Module 4</strong>, partie 2 — vente, avis clients, CRM.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 5</span><span class="calendar__text"><strong>Module 4</strong>, partie 3 — réseaux sociaux &amp; présence en ligne, traduction.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 6</span><span class="calendar__text"><strong>Module 5</strong> — fonctionnalités avancées.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 7</span><span class="calendar__text"><strong>Module 6</strong> — mise en pratique et validation.</span></div>
     </div>
   </section>
 
