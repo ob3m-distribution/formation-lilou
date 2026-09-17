@@ -1,0 +1,480 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Claude pour Lilou</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#eaf4f6;
+    --surface:#ffffff;
+    --surface-2:#dcedf1;
+    --ink:#0f2733;
+    --ink-soft:#4c6b76;
+    --ink-faint:#7d9aa4;
+    --line:#c6dfe4;
+    --heading:#0d3b66;
+    --accent:#ff6f59;
+    --accent-strong:#d94f3c;
+    --accent-soft:#ffe3db;
+    --good:#1f9d7c;
+    --alert:#c1442a;
+    --alert-soft:#f8ddd3;
+    --code-bg:#072a45;
+    --code-ink:#d8eef5;
+    --cat-blue:#2f7fd1;
+    --cat-orange:#ff6f59;
+    --cat-aqua:#14b8a6;
+    --cat-yellow:#f2b134;
+    --shadow: 0 1px 2px rgba(13,42,56,0.06), 0 10px 26px -14px rgba(13,42,56,0.24);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#071826; --surface:#0e2438; --surface-2:#123049;
+      --ink:#e6f4f7; --ink-soft:#9db9c4; --ink-faint:#6d8b97; --line:#1f4257;
+      --heading:#8fc7ee; --accent:#ff8a72; --accent-strong:#ffab98; --accent-soft:rgba(255,138,114,0.16);
+      --good:#5fd4b0; --alert:#e2795f; --alert-soft:rgba(226,121,95,0.16);
+      --code-bg:#04121f; --code-ink:#cdeaf4;
+      --cat-blue:#4f9eea; --cat-orange:#ff8a72; --cat-aqua:#2dd4c0; --cat-yellow:#f2c14e;
+      --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 14px 30px -16px rgba(0,0,0,0.65);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#071826; --surface:#0e2438; --surface-2:#123049;
+    --ink:#e6f4f7; --ink-soft:#9db9c4; --ink-faint:#6d8b97; --line:#1f4257;
+    --heading:#8fc7ee; --accent:#ff8a72; --accent-strong:#ffab98; --accent-soft:rgba(255,138,114,0.16);
+    --good:#5fd4b0; --alert:#e2795f; --alert-soft:rgba(226,121,95,0.16);
+    --code-bg:#04121f; --code-ink:#cdeaf4;
+    --cat-blue:#4f9eea; --cat-orange:#ff8a72; --cat-aqua:#2dd4c0; --cat-yellow:#f2c14e;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 14px 30px -16px rgba(0,0,0,0.65);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:"Public Sans","Segoe UI",system-ui,sans-serif; font-size:16px; line-height:1.62; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:"Source Serif 4","Georgia",serif; color:var(--heading); font-weight:600; text-wrap:balance; margin:0;}
+  p{margin:0;}
+  a{color:inherit;}
+  ::selection{background:var(--accent-soft); color:var(--ink);}
+  :focus-visible{outline:2px solid var(--cat-blue); outline-offset:2px; border-radius:4px;}
+  strong{color:var(--heading); font-weight:600;}
+  .kicker{font-family:"IBM Plex Mono",monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-strong); font-weight:500;}
+
+  /* top nav */
+  .top-nav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter:blur(10px) saturate(1.1); border-bottom:1px solid var(--line); padding:12px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .top-nav__brand h1{font-size:1.02rem; line-height:1.3;}
+  .top-nav__brand span.topbar__name{color:var(--accent);}
+  .top-nav__links{display:flex; gap:6px; flex-wrap:wrap;}
+  .top-nav__links a{font-family:"IBM Plex Mono",monospace; font-size:0.7rem; text-decoration:none; color:var(--ink-soft); padding:6px 12px; border-radius:99px; border:1px solid var(--line); background:var(--surface); white-space:nowrap;}
+  .top-nav__links a:hover{border-color:var(--accent); color:var(--accent-strong);}
+
+  .stage{max-width:760px; margin:0 auto; padding:40px 24px 90px; display:flex; flex-direction:column; gap:64px;}
+  @media (max-width:640px){ .stage{padding:26px 16px 72px; gap:48px;} }
+
+  .section{scroll-margin-top:70px; display:flex; flex-direction:column; gap:18px;}
+  .section-head{display:flex; flex-direction:column; gap:7px; max-width:620px;}
+  .section-head h2{font-size:1.45rem;}
+  .section-head__lede{color:var(--ink-soft); font-size:0.96rem;}
+
+  /* hero */
+  .hero{display:flex; flex-direction:column; gap:16px;}
+  .hero h1{font-size:2.05rem; line-height:1.18; max-width:600px;}
+  .hero__lede{color:var(--ink-soft); font-size:1.02rem; max-width:600px;}
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:6px;}
+  @media (max-width:640px){ .stat-row{grid-template-columns:repeat(2,1fr);} }
+  .stat-tile{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 10px; text-align:center; box-shadow:var(--shadow);}
+  .stat-tile__num{font-family:"Source Serif 4",serif; font-size:1.5rem; color:var(--heading); font-weight:700; display:block; font-variant-numeric:tabular-nums;}
+  .stat-tile__label{font-family:"IBM Plex Mono",monospace; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--ink-faint);}
+
+  .bullets{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:9px; font-size:0.97rem;}
+  .bullets li::marker{color:var(--accent); font-family:"IBM Plex Mono",monospace; font-size:0.85em;}
+
+  .callout{display:flex; gap:12px; padding:15px 17px; border-radius:11px; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); font-size:0.93rem;}
+  .callout__icon{flex:none; width:27px; height:27px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:"IBM Plex Mono",monospace; font-size:0.8rem; font-weight:700;}
+  .callout--alert{border-color:color-mix(in srgb, var(--alert) 35%, var(--line));}
+  .callout--alert .callout__icon{background:var(--alert-soft); color:var(--alert);}
+
+  .more{border:1px dashed var(--line); border-radius:10px; padding:0 15px;}
+  .more summary{list-style:none; cursor:pointer; padding:11px 0; font-family:"IBM Plex Mono",monospace; font-size:0.78rem; color:var(--ink-soft); display:flex; align-items:center; gap:8px;}
+  .more summary::-webkit-details-marker{display:none;}
+  .more summary::before{content:"+"; color:var(--accent); font-weight:700; width:1em;}
+  .more[open] summary::before{content:"\2013";}
+  .more__body{padding:0 0 15px; font-size:0.9rem; color:var(--ink-soft); display:flex; flex-direction:column; gap:9px;}
+
+  /* format legend / badges */
+  .format-legend{display:flex; gap:18px; flex-wrap:wrap;}
+  .format-badge{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:0.76rem; color:var(--ink-soft);}
+  .format-badge svg{width:15px; height:15px; color:var(--c); flex:none;}
+
+  /* roadmap */
+  .roadmap-wrap{overflow-x:auto; padding-bottom:6px;}
+  .roadmap{position:relative; display:flex; justify-content:space-between; gap:6px; padding-top:4px; min-width:600px;}
+  .roadmap::before{content:""; position:absolute; top:27px; left:23px; right:23px; height:2px; background:var(--line); z-index:0;}
+  .roadmap__node{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:7px; flex:1; min-width:0; padding:0 4px;}
+  .roadmap__circle{width:46px; height:46px; border-radius:99px; background:var(--surface); border:2px solid var(--heading); display:flex; align-items:center; justify-content:center; font-family:"Source Serif 4",serif; font-weight:700; color:var(--heading); box-shadow:var(--shadow); flex:none;}
+  .roadmap__title{font-size:0.72rem; text-align:center; color:var(--ink-soft); font-weight:600; line-height:1.25;}
+  .roadmap__duration{font-family:"IBM Plex Mono",monospace; font-size:0.64rem; color:var(--ink-faint);}
+  .roadmap__dots{display:flex; gap:4px;}
+  .roadmap__dot{width:6px; height:6px; border-radius:99px; background:var(--c);}
+
+  /* module cards */
+  .modules{display:flex; flex-direction:column; gap:16px;}
+  .module-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:22px 22px 20px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px;}
+  .module-card__top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .module-card__id{display:flex; align-items:baseline; gap:10px;}
+  .module-card__num{font-family:"IBM Plex Mono",monospace; color:var(--accent); font-size:0.85rem; flex:none;}
+  .module-card__title{font-size:1.18rem;}
+  .module-card__duration{font-family:"IBM Plex Mono",monospace; font-size:0.74rem; color:var(--ink-faint); white-space:nowrap;}
+  .module-card__objectif{font-size:0.93rem; color:var(--ink-soft); padding-left:14px; border-left:3px solid var(--accent-soft);}
+  .module-card__objectif strong{color:var(--ink-soft); font-weight:600;}
+  .module-card__content{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:7px; font-size:0.91rem;}
+  .module-card__content li::marker{color:var(--accent); font-family:"IBM Plex Mono",monospace; font-size:0.85em;}
+  .module-card__deliverable{font-size:0.84rem; color:var(--ink-faint); border-top:1px dashed var(--line); padding-top:11px;}
+  .module-card__deliverable strong{color:var(--ink-soft); font-weight:600;}
+  .module-link{display:inline-flex; align-self:flex-start; align-items:center; gap:6px; margin-top:2px; padding:9px 16px; border-radius:8px; background:var(--accent); color:#fff; text-decoration:none; font-size:0.85rem; font-weight:600; font-family:"Public Sans",sans-serif; transition:background .15s ease;}
+  .module-link:hover{background:var(--accent-strong);}
+
+  .subtheme-list{display:flex; flex-direction:column; gap:9px; margin:2px 0 0;}
+  .subtheme{display:flex; gap:10px; align-items:baseline;}
+  .subtheme__num{font-family:"IBM Plex Mono",monospace; font-size:0.76rem; color:var(--ink-faint); flex:none;}
+  .subtheme__text{font-size:0.89rem; color:var(--ink-soft);}
+  .subtheme__text strong{color:var(--heading); font-weight:600;}
+
+  /* prompt teaser */
+  .prompt-block{border-radius:10px; overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow);}
+  .prompt-block__head{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 14px; background:var(--surface-2); border-bottom:1px solid var(--line); font-family:"IBM Plex Mono",monospace; font-size:0.7rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-faint);}
+  .copy-btn{font-family:"IBM Plex Mono",monospace; font-size:0.72rem; background:var(--surface); color:var(--ink-soft); border:1px solid var(--line); border-radius:6px; padding:4px 10px; cursor:pointer; text-transform:none;}
+  .copy-btn:hover{border-color:var(--accent); color:var(--accent-strong);}
+  .copy-btn--done{background:var(--good); border-color:var(--good); color:white;}
+  .prompt-block__body{margin:0; padding:15px; background:var(--code-bg); color:var(--code-ink); font-family:"IBM Plex Mono",monospace; font-size:0.85rem; line-height:1.58; white-space:pre-wrap; word-break:break-word; overflow-x:auto;}
+
+  /* calendar */
+  .calendar{display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow);}
+  .calendar__row{display:grid; grid-template-columns:100px 1fr; gap:14px; padding:13px 16px; border-bottom:1px solid var(--line); align-items:center;}
+  .calendar__row:last-child{border-bottom:none;}
+  .calendar__week{font-family:"IBM Plex Mono",monospace; font-size:0.78rem; color:var(--accent-strong); font-weight:600;}
+  .calendar__text{font-size:0.9rem; color:var(--ink-soft);}
+  .calendar__text strong{color:var(--ink);}
+
+  .page-footer{border-top:1px solid var(--line); padding-top:20px; color:var(--ink-faint); font-size:0.85rem; display:flex; flex-direction:column; gap:5px;}
+  .page-footer strong{color:var(--ink-soft);}
+
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+</style>
+
+<header class="top-nav">
+  <div class="top-nav__brand">
+    <span class="kicker">Plaquette de formation</span>
+    <h1>Programme Claude — <span class="topbar__name">Lilou</span></h1>
+  </div>
+  <nav class="top-nav__links" aria-label="Sommaire">
+    <a href="#objectifs">Objectifs</a>
+    <a href="#deroulement">Déroulement</a>
+    <a href="#programme">Programme</a>
+    <a href="#apercu">Aperçu</a>
+    <a href="#calendrier">Calendrier</a>
+  </nav>
+</header>
+
+<main class="stage">
+
+  <section class="hero section" id="hero">
+    <span class="kicker">Assistante Commerciale Web · AOB Diffusion</span>
+    <h1>Un parcours complet pour maîtriser Claude dans ton métier</h1>
+    <p class="hero__lede">Ce document présente le programme de formation conçu pour toi : 6 modules, des vidéos courtes, des exercices sur des cas concrets et des fiches prompts prêtes à l'emploi. Les contenus interactifs seront mis à disposition prochainement sur ton espace de formation personnel — cette plaquette en est le sommaire détaillé.</p>
+    <div class="stat-row">
+      <div class="stat-tile"><span class="stat-tile__num">6</span><span class="stat-tile__label">Modules</span></div>
+      <div class="stat-tile"><span class="stat-tile__num">≈2h40</span><span class="stat-tile__label">Durée totale</span></div>
+      <div class="stat-tile"><span class="stat-tile__num">10</span><span class="stat-tile__label">Vidéos courtes</span></div>
+      <div class="stat-tile"><span class="stat-tile__num">9</span><span class="stat-tile__label">Fiches prompts</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="confidentialite">
+    <div class="section-head">
+      <span class="kicker">Le principe non négociable</span>
+      <h2>Confidentialité d'abord</h2>
+    </div>
+    <div class="callout callout--alert">
+      <div class="callout__icon">!</div>
+      <div>Jamais de données personnelles de clients (email, adresse, historique d'achat, moyens de paiement) dans un outil non validé. Un doute ? Demande à l'IT ou à la direction avant. Ce point est traité en détail au module 2.</div>
+    </div>
+    <details class="more">
+      <summary>Pourquoi c'est particulièrement important chez AOB Diffusion</summary>
+      <div class="more__body">
+        <p>Activité e-commerce : on manipule au quotidien des données clients soumises au <strong>RGPD</strong> (identité, coordonnées, historiques de commande).</p>
+        <p>Pour s'entraîner sur un cas réel, on anonymise systématiquement : nom du client, numéro de commande et coordonnées remplacés par des exemples fictifs.</p>
+        <p>Le réflexe simple : si tu ne le dirais pas à voix haute dans un café, ne le colle pas dans Claude sans validation.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="section" id="objectifs">
+    <div class="section-head">
+      <span class="kicker">Objectifs pédagogiques</span>
+      <h2>Ce que tu sauras faire à la fin</h2>
+      <p class="section-head__lede">Le programme est construit autour de situations réelles de ton quotidien, pas d'exemples génériques.</p>
+    </div>
+    <ul class="bullets">
+      <li>Répondre à un client mécontent avec un ton posé et professionnel, en quelques minutes.</li>
+      <li>Rédiger une fiche produit vendeuse et optimisée à partir d'une simple liste de caractéristiques.</li>
+      <li>Relancer un panier abandonné avec un message qui donne vraiment envie de finaliser l'achat.</li>
+      <li>Construire un argumentaire de vente adapté à un client hésitant.</li>
+      <li>Résumer un échange client dans le CRM en quelques lignes exploitables.</li>
+      <li>Savoir précisément quelles données clients tu as le droit — ou non — de confier à un outil d'IA.</li>
+    </ul>
+  </section>
+
+  <section class="section" id="deroulement">
+    <div class="section-head">
+      <span class="kicker">Modalités</span>
+      <h2>Comment se déroule la formation</h2>
+      <p class="section-head__lede">En autonomie, à ton rythme. Aucun prérequis technique.</p>
+    </div>
+    <ul class="bullets">
+      <li>4 formats combinés selon les modules : vidéo, exercice pratique, fiche mémo, quiz de validation.</li>
+      <li>Rythme suggéré : un module par semaine sur 6 semaines (calendrier détaillé plus bas).</li>
+      <li>Chaque module est indépendant : tu peux avancer plus vite, ou revenir en arrière quand tu veux.</li>
+    </ul>
+    <div class="format-legend">
+      <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>Vidéo</span>
+      <span class="format-badge" style="--c:var(--cat-orange)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L15.5 5.5l3 3L8 19l-4 1z"/><path d="M13 8l3 3"/></svg>Exercice</span>
+      <span class="format-badge" style="--c:var(--cat-aqua)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>Fiche</span>
+      <span class="format-badge" style="--c:var(--cat-yellow)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16 9.3"/></svg>Quiz</span>
+    </div>
+  </section>
+
+  <section class="section" id="programme">
+    <div class="section-head">
+      <span class="kicker">Vue d'ensemble</span>
+      <h2>Le programme en un coup d'œil</h2>
+      <p class="section-head__lede">Le parcours va du plus général — qu'est-ce que Claude, quelles règles — vers ce qui sera vraiment utile au quotidien : le module 4 traite uniquement des tâches concrètes de ton métier.</p>
+    </div>
+    <div class="roadmap-wrap">
+      <div class="roadmap" role="img" aria-label="Feuille de route en 6 modules : Découvrir Claude (15 min), Confidentialité et bon usage (15 min), La méthode (20 min), Les usages métier (60 min), Aller plus loin (15 min), Mise en pratique et validation (35 min)">
+        <div class="roadmap__node">
+          <div class="roadmap__circle">1</div>
+          <span class="roadmap__title">Découvrir Claude</span>
+          <span class="roadmap__duration">15 min</span>
+          <span class="roadmap__dots"><span class="roadmap__dot" style="--c:var(--cat-blue)"></span><span class="roadmap__dot" style="--c:var(--cat-aqua)"></span></span>
+        </div>
+        <div class="roadmap__node">
+          <div class="roadmap__circle">2</div>
+          <span class="roadmap__title">Confidentialité</span>
+          <span class="roadmap__duration">15 min</span>
+          <span class="roadmap__dots"><span class="roadmap__dot" style="--c:var(--cat-blue)"></span><span class="roadmap__dot" style="--c:var(--cat-yellow)"></span></span>
+        </div>
+        <div class="roadmap__node">
+          <div class="roadmap__circle">3</div>
+          <span class="roadmap__title">La méthode</span>
+          <span class="roadmap__duration">20 min</span>
+          <span class="roadmap__dots"><span class="roadmap__dot" style="--c:var(--cat-blue)"></span><span class="roadmap__dot" style="--c:var(--cat-orange)"></span></span>
+        </div>
+        <div class="roadmap__node">
+          <div class="roadmap__circle">4</div>
+          <span class="roadmap__title">Usages métier</span>
+          <span class="roadmap__duration">≈60 min</span>
+          <span class="roadmap__dots"><span class="roadmap__dot" style="--c:var(--cat-blue)"></span><span class="roadmap__dot" style="--c:var(--cat-orange)"></span><span class="roadmap__dot" style="--c:var(--cat-aqua)"></span></span>
+        </div>
+        <div class="roadmap__node">
+          <div class="roadmap__circle">5</div>
+          <span class="roadmap__title">Aller plus loin</span>
+          <span class="roadmap__duration">15 min</span>
+          <span class="roadmap__dots"><span class="roadmap__dot" style="--c:var(--cat-blue)"></span><span class="roadmap__dot" style="--c:var(--cat-aqua)"></span></span>
+        </div>
+        <div class="roadmap__node">
+          <div class="roadmap__circle">6</div>
+          <span class="roadmap__title">Mise en pratique</span>
+          <span class="roadmap__duration">35 min</span>
+          <span class="roadmap__dots"><span class="roadmap__dot" style="--c:var(--cat-orange)"></span><span class="roadmap__dot" style="--c:var(--cat-yellow)"></span><span class="roadmap__dot" style="--c:var(--cat-aqua)"></span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modules">
+
+      <article class="module-card">
+        <div class="module-card__top">
+          <div class="module-card__id"><span class="module-card__num">Module 01</span><h3 class="module-card__title">Découvrir Claude</h3></div>
+          <span class="module-card__duration">≈15 min</span>
+        </div>
+        <div class="format-legend">
+          <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>1 vidéo</span>
+          <span class="format-badge" style="--c:var(--cat-aqua)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>1 fiche</span>
+        </div>
+        <p class="module-card__objectif"><strong>Objectif :</strong> comprendre ce qu'est Claude, ses forces et ses limites, et ouvrir sa première session.</p>
+        <ul class="module-card__content">
+          <li>Qu'est-ce qu'une IA conversationnelle, en langage simple.</li>
+          <li>Ce que Claude sait faire — et ce qu'il ne sait pas faire.</li>
+          <li>Différence avec Copilot : quand utiliser lequel.</li>
+          <li>Créer un compte et se repérer dans l'interface (web, mobile, bureau).</li>
+        </ul>
+        <p class="module-card__deliverable"><strong>Livrable :</strong> fiche mémo « Claude en une page » à garder sous la main.</p>
+        <a class="module-link" href="module-01.html">Ouvrir le module &rarr;</a>
+      </article>
+
+      <article class="module-card">
+        <div class="module-card__top">
+          <div class="module-card__id"><span class="module-card__num">Module 02</span><h3 class="module-card__title">Le cadre : confidentialité &amp; bon usage</h3></div>
+          <span class="module-card__duration">≈15 min</span>
+        </div>
+        <div class="format-legend">
+          <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>1 vidéo</span>
+          <span class="format-badge" style="--c:var(--cat-yellow)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16 9.3"/></svg>1 quiz</span>
+        </div>
+        <p class="module-card__objectif"><strong>Objectif :</strong> savoir précisément ce que tu as le droit de faire avec Claude chez AOB Diffusion, et le réflexe à avoir en cas de doute.</p>
+        <ul class="module-card__content">
+          <li>La règle d'or : ce qu'on ne colle jamais dans un outil non validé.</li>
+          <li>RGPD : ce que ça change concrètement pour toi (emails, adresses, historiques d'achat, moyens de paiement).</li>
+          <li>Anonymiser un cas client réel pour s'entraîner sans risque.</li>
+          <li>Qui contacter en cas de doute (IT, direction).</li>
+        </ul>
+        <p class="module-card__deliverable"><strong>Livrable :</strong> quiz de 5 questions pour valider les acquis.</p>
+      </article>
+
+      <article class="module-card">
+        <div class="module-card__top">
+          <div class="module-card__id"><span class="module-card__num">Module 03</span><h3 class="module-card__title">La méthode : bien formuler sa demande</h3></div>
+          <span class="module-card__duration">≈20 min</span>
+        </div>
+        <div class="format-legend">
+          <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>1 vidéo</span>
+          <span class="format-badge" style="--c:var(--cat-orange)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L15.5 5.5l3 3L8 19l-4 1z"/><path d="M13 8l3 3"/></svg>3 exercices</span>
+        </div>
+        <p class="module-card__objectif"><strong>Objectif :</strong> rédiger une demande efficace dès le premier essai.</p>
+        <ul class="module-card__content">
+          <li>La formule contexte + tâche + format.</li>
+          <li>Avant / après sur des exemples réels de ton métier commercial et e-commerce.</li>
+          <li>Itérer : préciser, raccourcir, changer de ton.</li>
+          <li>Les erreurs qui produisent une réponse à côté de la plaque.</li>
+        </ul>
+        <p class="module-card__deliverable"><strong>Livrable :</strong> 3 exercices guidés, corrigés commentés inclus.</p>
+      </article>
+
+      <article class="module-card">
+        <div class="module-card__top">
+          <div class="module-card__id"><span class="module-card__num">Module 04</span><h3 class="module-card__title">Les usages métier — cœur du programme</h3></div>
+          <span class="module-card__duration">≈60 min</span>
+        </div>
+        <div class="format-legend">
+          <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>6 vidéos</span>
+          <span class="format-badge" style="--c:var(--cat-aqua)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>6 fiches</span>
+          <span class="format-badge" style="--c:var(--cat-orange)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L15.5 5.5l3 3L8 19l-4 1z"/><path d="M13 8l3 3"/></svg>3 exercices</span>
+        </div>
+        <p class="module-card__objectif"><strong>Objectif :</strong> disposer d'une boîte à outils de prompts opérationnels pour ton quotidien commercial et e-commerce.</p>
+        <div class="subtheme-list">
+          <div class="subtheme"><span class="subtheme__num">4.1</span><span class="subtheme__text"><strong>Relation client &amp; support</strong> — répondre à un client mécontent, traiter une réclamation, message de support après-vente.</span></div>
+          <div class="subtheme"><span class="subtheme__num">4.2</span><span class="subtheme__text"><strong>Fiches produits &amp; catalogue</strong> — rédiger et optimiser une fiche produit, la décliner en plusieurs formats.</span></div>
+          <div class="subtheme"><span class="subtheme__num">4.3</span><span class="subtheme__text"><strong>Vente &amp; conversion</strong> — argumentaire de vente personnalisé, relance de panier abandonné.</span></div>
+          <div class="subtheme"><span class="subtheme__num">4.4</span><span class="subtheme__text"><strong>Avis clients &amp; réputation</strong> — répondre à un avis négatif, valoriser un avis positif, synthétiser les retours.</span></div>
+          <div class="subtheme"><span class="subtheme__num">4.5</span><span class="subtheme__text"><strong>CRM &amp; suivi</strong> — note de suivi client, résumé d'un échange pour le CRM.</span></div>
+          <div class="subtheme"><span class="subtheme__num">4.6</span><span class="subtheme__text"><strong>Communication multilingue</strong> — traduire et adapter une fiche produit ou un message client à l'international.</span></div>
+        </div>
+        <p class="module-card__deliverable"><strong>Livrable :</strong> 6 fiches prompts prêtes à l'emploi + 3 exercices sur cas anonymisés. Un aperçu juste en dessous.</p>
+      </article>
+
+      <article class="module-card">
+        <div class="module-card__top">
+          <div class="module-card__id"><span class="module-card__num">Module 05</span><h3 class="module-card__title">Aller plus loin</h3></div>
+          <span class="module-card__duration">≈15 min</span>
+        </div>
+        <div class="format-legend">
+          <span class="format-badge" style="--c:var(--cat-blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>1 vidéo</span>
+          <span class="format-badge" style="--c:var(--cat-aqua)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>1 fiche</span>
+        </div>
+        <p class="module-card__objectif"><strong>Objectif :</strong> exploiter les fonctionnalités avancées pour gagner encore plus de temps.</p>
+        <ul class="module-card__content">
+          <li>Projects : garder le contexte d'un dossier récurrent (ex. lancement d'une nouvelle collection).</li>
+          <li>Artifacts : générer un document ou un tableau modifiable.</li>
+          <li>Import de fichiers : PDF, Excel, Word directement dans la conversation.</li>
+          <li>Application mobile : utile en déplacement.</li>
+        </ul>
+        <p class="module-card__deliverable"><strong>Livrable :</strong> fiche « Fonctionnalités avancées, en un coup d'œil ».</p>
+      </article>
+
+      <article class="module-card">
+        <div class="module-card__top">
+          <div class="module-card__id"><span class="module-card__num">Module 06</span><h3 class="module-card__title">Mise en pratique &amp; validation</h3></div>
+          <span class="module-card__duration">≈35 min</span>
+        </div>
+        <div class="format-legend">
+          <span class="format-badge" style="--c:var(--cat-orange)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L15.5 5.5l3 3L8 19l-4 1z"/><path d="M13 8l3 3"/></svg>1 atelier</span>
+          <span class="format-badge" style="--c:var(--cat-yellow)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16 9.3"/></svg>1 quiz final</span>
+          <span class="format-badge" style="--c:var(--cat-aqua)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>1 fiche</span>
+        </div>
+        <p class="module-card__objectif"><strong>Objectif :</strong> valider ses acquis sur un cas complet, de bout en bout.</p>
+        <ul class="module-card__content">
+          <li>Cas fil rouge : une commande client fictive complexe, de la réponse initiale à la relance après-vente.</li>
+          <li>Auto-évaluation avec le quiz final.</li>
+          <li>Fiche de synthèse personnelle à conserver.</li>
+        </ul>
+        <p class="module-card__deliverable"><strong>Livrable :</strong> attestation de parcours interne + fiche de synthèse.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section" id="apercu">
+    <div class="section-head">
+      <span class="kicker">Extrait du module 4.3</span>
+      <h2>Aperçu d'une fiche pratique</h2>
+      <p class="section-head__lede">Chaque fiche du module 4 se présente ainsi : un contexte, un prompt prêt à copier, une astuce.</p>
+    </div>
+    <div class="module-card">
+      <div class="module-card__top">
+        <div class="module-card__id"><span class="module-card__num">Fiche 4.3</span><h3 class="module-card__title">Relancer un panier abandonné</h3></div>
+      </div>
+      <p class="module-card__objectif">Donner envie de finaliser l'achat sans paraître pressant.</p>
+      <div class="prompt-block">
+        <div class="prompt-block__head"><span>Prompt</span><button class="copy-btn">Copier</button></div>
+        <pre class="prompt-block__body">Écris un email court de relance pour un panier abandonné contenant un collier fantaisie à 24€. Ton amical et chaleureux, avec une note d'urgence légère (stock limité), sans être pressant. Objet accrocheur, signature à la fin.</pre>
+      </div>
+      <p class="module-card__deliverable"><strong>Astuce :</strong> personnalise toujours avec le vrai produit et le vrai prix — un message trop générique se voit tout de suite.</p>
+    </div>
+  </section>
+
+  <section class="section" id="calendrier">
+    <div class="section-head">
+      <span class="kicker">Rythme suggéré</span>
+      <h2>Calendrier sur 6 semaines</h2>
+      <p class="section-head__lede">≈25 à 30 minutes par semaine. Purement indicatif : le programme s'adapte à ton agenda.</p>
+    </div>
+    <div class="calendar">
+      <div class="calendar__row"><span class="calendar__week">Semaine 1</span><span class="calendar__text"><strong>Modules 1 &amp; 2</strong> — fondamentaux et cadre de confidentialité.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 2</span><span class="calendar__text"><strong>Module 3</strong> — la méthode contexte + tâche + format.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 3</span><span class="calendar__text"><strong>Module 4</strong>, partie 1 — relation client, fiches produits.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 4</span><span class="calendar__text"><strong>Module 4</strong>, partie 2 — vente, avis clients, CRM, traduction.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 5</span><span class="calendar__text"><strong>Module 5</strong> — fonctionnalités avancées.</span></div>
+      <div class="calendar__row"><span class="calendar__week">Semaine 6</span><span class="calendar__text"><strong>Module 6</strong> — mise en pratique et validation.</span></div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <p><strong>Programme préparé pour Lilou</strong> — Assistante Commerciale Web, AOB Diffusion.</p>
+    <p>Les vidéos et exercices interactifs de ce programme seront mis à disposition prochainement sur ton espace de formation personnel.</p>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var block = btn.closest('.prompt-block');
+      var pre = block ? block.querySelector('pre') : null;
+      if (!pre) return;
+      var text = pre.textContent;
+      var reset = function(ok){
+        btn.textContent = ok ? 'Copié !' : 'Copie manuelle';
+        if (ok) btn.classList.add('copy-btn--done');
+        setTimeout(function(){ btn.textContent = 'Copier'; btn.classList.remove('copy-btn--done'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function(){ reset(true); }).catch(function(){ reset(false); });
+      } else { reset(false); }
+    });
+  });
+})();
+</script>
+
+</body></html>
